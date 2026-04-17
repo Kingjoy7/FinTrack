@@ -25,6 +25,28 @@
         return data;
     }
 
+    async function getJson(path) {
+        var response = await fetch(API_BASE_URL + path, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            var data = null;
+            try {
+                data = await response.json();
+            } catch (error) {
+                data = null;
+            }
+            var message = data && data.message ? data.message : "Request failed";
+            throw new Error(message);
+        }
+
+        return response.json();
+    }
+
     window.UserApi = {
         login: function (email, password) {
             return postJson("/users/login", {
@@ -38,6 +60,19 @@
                 email: email,
                 password: password
             });
+        }
+    };
+
+    window.BudgetApi = {
+        setBudget: function (userId, amount) {
+            return postJson("/budget/set", {
+                userId: Number(userId),
+                amount: Number(amount),
+                period: "monthly"
+            });
+        },
+        getBudget: function (userId) {
+            return getJson("/budget/" + encodeURIComponent(userId));
         }
     };
 })();
