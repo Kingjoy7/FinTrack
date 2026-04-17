@@ -1,196 +1,229 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Personal Budget Manager</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .modules-section {
-            margin-bottom: 2rem;
-        }
 
-        .modules-section h2 {
-            margin: 0 0 1rem;
-            font-size: 1.1rem;
-            color: #1d2939;
-        }
+```
+<style>
+body {
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
+.dashboard {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: white;
+    padding: 2rem 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
 
-        .module-card {
-            border: 1px solid #d0d5dd;
-            border-radius: 10px;
-            padding: 1.5rem;
-            background: #fafbfc;
-            text-align: center;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            color: inherit;
-        }
+h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+}
 
-        .module-card:hover {
-            background: #f0f4f8;
-            border-color: #1d4ed8;
-            box-shadow: 0 4px 12px rgba(16, 24, 40, 0.08);
-            transform: translateY(-2px);
-        }
+p {
+    color: #64748b;
+}
 
-        .module-card h3 {
-            margin: 0 0 0.5rem;
-            font-size: 1.1rem;
-            color: #1d2939;
-        }
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
 
-        .module-card p {
-            margin: 0;
-            font-size: 0.9rem;
-            color: #475467;
-        }
+.stat-card {
+    border-radius: 16px;
+    padding: 1.3rem;
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    transition: 0.2s;
+}
 
-        .user-info {
-            background: #fafbfc;
-            border: 1px solid #d0d5dd;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-        }
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+}
 
-        .user-info p {
-            margin: 0;
-            color: #475467;
-        }
+.label {
+    font-size: 0.8rem;
+    color: #64748b;
+    text-transform: uppercase;
+}
 
-        .user-info strong {
-            color: #1d2939;
-        }
+.amount {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-top: 5px;
+}
 
-        .subtitle {
-            margin: 0 0 1.5rem;
-            color: #475467;
-            font-size: 0.95rem;
-        }
+.income .amount { color: #16a34a; }
+.expense .amount { color: #dc2626; }
+.balance .amount { color: #2563eb; }
 
-        @media (max-width: 768px) {
-            .modules-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+.budget-card {
+    margin-top: 2rem;
+    padding: 1.8rem;
+    border-radius: 18px;
+    background: #f9fafb;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    width: 200px;
+}
+
+button {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+.report-card {
+    margin-top: 2rem;
+    padding: 1.8rem;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.txn-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.txn-table th, .txn-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.badge.INCOME { background: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 10px; }
+.badge.EXPENSE { background: #fee2e2; color: #dc2626; padding: 4px 8px; border-radius: 10px; }
+
+.txn-amount.INCOME { color: #16a34a; }
+.txn-amount.EXPENSE { color: #dc2626; }
+
+.actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 10px;
+}
+
+.actions a, .actions button {
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.actions a {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.actions button {
+    background: #ef4444;
+    color: white;
+}
+</style>
+```
+
 </head>
+
 <body>
-    <section class="dashboard">
-        <h1>Personal Budget &amp; Expense Manager</h1>
-        <p class="subtitle">Manage your finances efficiently</p>
+<section class="dashboard">
 
-        <div class="user-info" id="userInfo" style="display: none;">
-            <p>Welcome, <strong id="userName">User</strong> | <strong id="userId"></strong></p>
-        </div>
+```
+<h1>💰 Personal Finance Dashboard</h1>
+<p id="welcomeMessage">Welcome to your dashboard.</p>
+<p>Track your monthly budget and remaining balance here.</p>
 
-        <!-- Modules Section -->
-        <div class="modules-section">
-            <h2>Available Modules</h2>
-            <div class="modules-grid">
-                <!-- Transactions Module -->
-                <a href="transactions.html" class="module-card">
-                    <h3>💰 Transactions</h3>
-                    <p>Add and manage your income and expenses</p>
-                </a>
+<div class="summary-cards">
+    <div class="stat-card income">
+        <span class="label">Total Income</span>
+        <span class="amount" id="dashIncome">—</span>
+    </div>
+    <div class="stat-card expense">
+        <span class="label">Total Expense</span>
+        <span class="amount" id="dashExpense">—</span>
+    </div>
+    <div class="stat-card balance">
+        <span class="label">Balance</span>
+        <span class="amount" id="dashBalance">—</span>
+    </div>
+</div>
 
-                <!-- Budgets Module -->
-                <a href="#budgetSection" class="module-card">
-                    <h3>📊 Budgets</h3>
-                    <p>Set and track your monthly budget</p>
-                </a>
+<section class="budget-card">
+    <h2>Monthly Budget</h2>
 
-                <!-- Reports Module (Ready for future implementation) -->
-                <div class="module-card" style="opacity: 0.6; cursor: not-allowed;">
-                    <h3>📈 Reports</h3>
-                    <p>Coming Soon - Financial analysis and reports</p>
-                </div>
-            </div>
-        </div>
+    <form id="budgetForm">
+        <input id="budgetAmount" type="number" placeholder="Enter amount">
+        <button type="submit">Set Budget</button>
+    </form>
 
-        <!-- Budget Section -->
-        <section id="budgetSection" class="budget-card" aria-labelledby="budget-title">
-            <h2 id="budget-title">Monthly Budget</h2>
-            <p>Set your monthly budget, review remaining funds, and receive a clear alert if your spending goes over the plan.</p>
+    <p>Total Budget: <strong id="totalBudgetValue">$0.00</strong></p>
+    <p>Remaining Budget: <strong id="remainingBudgetValue">$0.00</strong></p>
 
-            <form id="budgetForm" class="budget-grid" novalidate>
-                <div class="budget-row">
-                    <label for="budgetAmount">Monthly Budget Amount</label>
-                    <input id="budgetAmount" type="number" min="0.01" step="0.01" placeholder="Enter amount" aria-label="Monthly budget amount">
-                </div>
-                <div class="budget-actions">
-                    <button type="submit">Set Budget</button>
-                </div>
-            </form>
+    <p id="budgetAlertText">Enter a monthly budget to begin tracking.</p>
+    <p id="budgetMessage"></p>
+</section>
 
-            <div class="budget-summary">
-                <div class="summary-item">
-                    <span>Total Budget</span>
-                    <strong id="totalBudgetValue">$0.00</strong>
-                </div>
-                <div class="summary-item remaining" id="remainingBudgetCard">
-                    <span>Remaining Budget</span>
-                    <strong class="value" id="remainingBudgetValue">$0.00</strong>
-                </div>
-            </div>
+<section class="report-card">
+    <h2>Recent Transactions</h2>
+    <div id="recentTransactionsContainer">
+        <p>Loading...</p>
+    </div>
+</section>
 
-            <p id="budgetAlertText" class="budget-status">Enter a monthly budget to begin tracking.</p>
-            <p id="budgetMessage" class="budget-alert" role="status" aria-live="polite"></p>
-        </section>
+<div class="actions">
+    <a href="login.html">Go to Login</a>
+    <a href="register.html">Go to Register</a>
+    <button id="logoutBtn">Logout</button>
+</div>
+```
 
-        <!-- Authentication Section -->
-        <div class="modules-section">
-            <h2>Account</h2>
-            <div class="actions">
-                <a href="login.html" class="secondary" id="loginLink" style="display: none;">Go to Login</a>
-                <a href="register.html" class="secondary" id="registerLink" style="display: none;">Go to Register</a>
-                <button id="logoutBtn" type="button" style="display: none;">Logout</button>
-            </div>
-        </div>
-    </section>
+</section>
 
-    <script src="js/api.js" defer></script>
-    <script src="js/budget.js" defer></script>
-    <script>
-        (function () {
-            var userId = localStorage.getItem("userId");
-            var userName = localStorage.getItem("userName");
-            var userInfo = document.getElementById("userInfo");
-            var userNameEl = document.getElementById("userName");
-            var userIdEl = document.getElementById("userId");
-            var logoutBtn = document.getElementById("logoutBtn");
-            var loginLink = document.getElementById("loginLink");
-            var registerLink = document.getElementById("registerLink");
+<script src="js/api.js"></script>
 
-            // Show user info if logged in
-            if (userId) {
-                if (userInfo) userInfo.style.display = "block";
-                if (userNameEl) userNameEl.textContent = userName || "User";
-                if (userIdEl) userIdEl.textContent = "ID: " + userId;
-                if (logoutBtn) logoutBtn.style.display = "inline-block";
-            } else {
-                if (loginLink) loginLink.style.display = "inline-block";
-                if (registerLink) registerLink.style.display = "inline-block";
-            }
+<script src="js/budget.js"></script>
 
-            // Logout functionality
-            if (logoutBtn) {
-                logoutBtn.addEventListener("click", function () {
-                    localStorage.removeItem("userId");
-                    localStorage.removeItem("userName");
-                    localStorage.removeItem("userEmail");
-                    window.location.href = "login.html";
-                });
-            }
-        })();
-    </script>
+<script src="js/report.js"></script>
+
+<script>
+(function () {
+    var userId = localStorage.getItem("userId");
+    var userName = localStorage.getItem("userName");
+
+    var welcomeMessage = document.getElementById("welcomeMessage");
+    if (welcomeMessage && userId) {
+        welcomeMessage.textContent = userName
+            ? ("Welcome, " + userName)
+            : ("Welcome back");
+    }
+
+    var logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+            localStorage.clear();
+            window.location.href = "login.html";
+        });
+    }
+})();
+</script>
+
 </body>
 </html>
