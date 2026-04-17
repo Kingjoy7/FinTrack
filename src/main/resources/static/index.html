@@ -9,7 +9,6 @@
 
 ```
 <style>
-/* ── Page Layout ───────────────────────── */
 body {
     background: linear-gradient(135deg, #eef2ff, #f8fafc);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,7 +23,6 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* ── Heading ───────────────────────── */
 h1 {
     font-size: 1.8rem;
     font-weight: 700;
@@ -35,7 +33,6 @@ p {
     color: #64748b;
 }
 
-/* ── Summary Cards ───────────────────────── */
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -48,7 +45,7 @@ p {
     padding: 1.3rem;
     background: linear-gradient(135deg, #f8fafc, #ffffff);
     box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: 0.2s;
 }
 
 .stat-card:hover {
@@ -56,13 +53,13 @@ p {
     box-shadow: 0 12px 25px rgba(0,0,0,0.1);
 }
 
-.stat-card .label {
+.label {
     font-size: 0.8rem;
     color: #64748b;
     text-transform: uppercase;
 }
 
-.stat-card .amount {
+.amount {
     font-size: 1.6rem;
     font-weight: bold;
     margin-top: 5px;
@@ -72,7 +69,6 @@ p {
 .expense .amount { color: #dc2626; }
 .balance .amount { color: #2563eb; }
 
-/* ── Budget Card ───────────────────────── */
 .budget-card {
     margin-top: 2rem;
     padding: 1.8rem;
@@ -95,14 +91,8 @@ button {
     background: #2563eb;
     color: white;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-button:hover {
-    background: #1d4ed8;
-}
-
-/* ── Transactions Table ───────────────────────── */
 .report-card {
     margin-top: 2rem;
     padding: 1.8rem;
@@ -116,39 +106,17 @@ button:hover {
     border-collapse: collapse;
 }
 
-.txn-table th {
-    text-align: left;
+.txn-table th, .txn-table td {
     padding: 10px;
-    border-bottom: 2px solid #e2e8f0;
-    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.txn-table td {
-    padding: 10px;
-    border-bottom: 1px solid #f1f5f9;
-    color: #1e293b;
-}
-
-.badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: bold;
-}
-
-.badge.INCOME { background: #dcfce7; color: #16a34a; }
-.badge.EXPENSE { background: #fee2e2; color: #dc2626; }
+.badge.INCOME { background: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 10px; }
+.badge.EXPENSE { background: #fee2e2; color: #dc2626; padding: 4px 8px; border-radius: 10px; }
 
 .txn-amount.INCOME { color: #16a34a; }
 .txn-amount.EXPENSE { color: #dc2626; }
 
-.no-data {
-    text-align: center;
-    padding: 1rem;
-    color: #64748b;
-}
-
-/* ── Buttons ───────────────────────── */
 .actions {
     margin-top: 2rem;
     display: flex;
@@ -156,10 +124,9 @@ button:hover {
 }
 
 .actions a, .actions button {
-    text-decoration: none;
     padding: 10px 15px;
     border-radius: 8px;
-    font-size: 0.9rem;
+    text-decoration: none;
 }
 
 .actions a {
@@ -170,10 +137,6 @@ button:hover {
 .actions button {
     background: #ef4444;
     color: white;
-}
-
-.actions button:hover {
-    background: #dc2626;
 }
 </style>
 ```
@@ -188,7 +151,6 @@ button:hover {
 <p id="welcomeMessage">Welcome to your dashboard.</p>
 <p>Track your monthly budget and remaining balance here.</p>
 
-<!-- Summary Cards -->
 <div class="summary-cards">
     <div class="stat-card income">
         <span class="label">Total Income</span>
@@ -204,7 +166,6 @@ button:hover {
     </div>
 </div>
 
-<!-- Budget Section -->
 <section class="budget-card">
     <h2>Monthly Budget</h2>
 
@@ -213,16 +174,13 @@ button:hover {
         <button type="submit">Set Budget</button>
     </form>
 
-    <div>
-        <p>Total Budget: <strong id="totalBudgetValue">$0.00</strong></p>
-        <p>Remaining Budget: <strong id="remainingBudgetValue">$0.00</strong></p>
-    </div>
+    <p>Total Budget: <strong id="totalBudgetValue">$0.00</strong></p>
+    <p>Remaining Budget: <strong id="remainingBudgetValue">$0.00</strong></p>
 
     <p id="budgetAlertText">Enter a monthly budget to begin tracking.</p>
     <p id="budgetMessage"></p>
 </section>
 
-<!-- Transactions -->
 <section class="report-card">
     <h2>Recent Transactions</h2>
     <div id="recentTransactionsContainer">
@@ -230,7 +188,6 @@ button:hover {
     </div>
 </section>
 
-<!-- Actions -->
 <div class="actions">
     <a href="login.html">Go to Login</a>
     <a href="register.html">Go to Register</a>
