@@ -4,54 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Personal Budget Manager</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: #f6f8fc;
-            color: #1d2939;
-        }
-
-        .dashboard {
-            width: min(92vw, 900px);
-            background: #ffffff;
-            border: 1px solid #d0d5dd;
-            border-radius: 14px;
-            padding: 2rem;
-            box-shadow: 0 10px 25px rgba(16, 24, 40, 0.08);
-        }
-
-        h1 {
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            margin: 0 0 1.5rem;
-            color: #475467;
-            font-size: 0.95rem;
-        }
-
-        .user-info {
-            background: #fafbfc;
-            border: 1px solid #d0d5dd;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .user-info p {
-            margin: 0;
-            color: #475467;
-        }
-
-        .user-info strong {
-            color: #1d2939;
-        }
-
         .modules-section {
             margin-bottom: 2rem;
         }
@@ -99,49 +53,30 @@
             color: #475467;
         }
 
-        .actions {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-        }
-
-        a, button {
-            border: 1px solid #1d4ed8;
-            background: #1d4ed8;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 0.55rem 0.9rem;
+        .user-info {
+            background: #fafbfc;
+            border: 1px solid #d0d5dd;
             border-radius: 8px;
-            cursor: pointer;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-info p {
+            margin: 0;
+            color: #475467;
+        }
+
+        .user-info strong {
+            color: #1d2939;
+        }
+
+        .subtitle {
+            margin: 0 0 1.5rem;
+            color: #475467;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        a:hover, button:hover {
-            background: #1e40af;
-        }
-
-        .secondary {
-            background: #ffffff;
-            color: #1d4ed8;
-            border: 1px solid #1d4ed8;
-        }
-
-        .secondary:hover {
-            background: #f0f4f8;
-        }
-
-        button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
         }
 
         @media (max-width: 768px) {
-            .dashboard {
-                padding: 1.5rem;
-            }
-
             .modules-grid {
                 grid-template-columns: 1fr;
             }
@@ -150,7 +85,7 @@
 </head>
 <body>
     <section class="dashboard">
-        <h1>Personal Budget & Expense Manager</h1>
+        <h1>Personal Budget &amp; Expense Manager</h1>
         <p class="subtitle">Manage your finances efficiently</p>
 
         <div class="user-info" id="userInfo" style="display: none;">
@@ -167,11 +102,11 @@
                     <p>Add and manage your income and expenses</p>
                 </a>
 
-                <!-- Budgets Module (Ready for future implementation) -->
-                <div class="module-card" style="opacity: 0.6; cursor: not-allowed;">
+                <!-- Budgets Module -->
+                <a href="#budgetSection" class="module-card">
                     <h3>📊 Budgets</h3>
-                    <p>Coming Soon - Budget planning and tracking</p>
-                </div>
+                    <p>Set and track your monthly budget</p>
+                </a>
 
                 <!-- Reports Module (Ready for future implementation) -->
                 <div class="module-card" style="opacity: 0.6; cursor: not-allowed;">
@@ -180,6 +115,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Budget Section -->
+        <section id="budgetSection" class="budget-card" aria-labelledby="budget-title">
+            <h2 id="budget-title">Monthly Budget</h2>
+            <p>Set your monthly budget, review remaining funds, and receive a clear alert if your spending goes over the plan.</p>
+
+            <form id="budgetForm" class="budget-grid" novalidate>
+                <div class="budget-row">
+                    <label for="budgetAmount">Monthly Budget Amount</label>
+                    <input id="budgetAmount" type="number" min="0.01" step="0.01" placeholder="Enter amount" aria-label="Monthly budget amount">
+                </div>
+                <div class="budget-actions">
+                    <button type="submit">Set Budget</button>
+                </div>
+            </form>
+
+            <div class="budget-summary">
+                <div class="summary-item">
+                    <span>Total Budget</span>
+                    <strong id="totalBudgetValue">$0.00</strong>
+                </div>
+                <div class="summary-item remaining" id="remainingBudgetCard">
+                    <span>Remaining Budget</span>
+                    <strong class="value" id="remainingBudgetValue">$0.00</strong>
+                </div>
+            </div>
+
+            <p id="budgetAlertText" class="budget-status">Enter a monthly budget to begin tracking.</p>
+            <p id="budgetMessage" class="budget-alert" role="status" aria-live="polite"></p>
+        </section>
 
         <!-- Authentication Section -->
         <div class="modules-section">
@@ -192,6 +157,8 @@
         </div>
     </section>
 
+    <script src="js/api.js" defer></script>
+    <script src="js/budget.js" defer></script>
     <script>
         (function () {
             var userId = localStorage.getItem("userId");
@@ -220,7 +187,7 @@
                     localStorage.removeItem("userId");
                     localStorage.removeItem("userName");
                     localStorage.removeItem("userEmail");
-                    window.location.href = "index.html";
+                    window.location.href = "login.html";
                 });
             }
         })();

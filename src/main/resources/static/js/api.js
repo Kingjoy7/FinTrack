@@ -109,4 +109,17 @@
             return deleteRequest("/api/transactions/" + transactionId);
         }
     };
+
+    window.BudgetApi = {
+        setBudget: function (userId, amount) {
+            return postJson("/budget/set", {
+                userId: Number(userId),
+                amount: Number(amount),
+                period: "monthly"
+            });
+        },
+        getBudget: function (userId) {
+            return getJson("/budget/" + encodeURIComponent(userId));
+        }
+    };
 })();
