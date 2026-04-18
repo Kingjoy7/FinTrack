@@ -1,44 +1,27 @@
 (function () {
-    function clearSessionAndLogout() {
-        localStorage.removeItem("userId");
-        localStorage.removeItem("userName");
-        localStorage.removeItem("userEmail");
-        window.location.href = "login.html";
-    }
-
     // Category mapping for Income and Expense
     var CATEGORIES = {
         INCOME: [
-            "SALARY",
-            "FREELANCE",
-            "INVESTMENT",
-            "BONUS",
-            "GIFT",
-            "OTHER_INCOME"
+            "Salary",
+            "Freelance",
+            "Investment",
+            "Bonus",
+            "Gift",
+            "Other Income"
         ],
         EXPENSE: [
-            "UTILITIES",
-            "RENT",
-            "TRANSPORTATION",
-            "ENTERTAINMENT",
-            "DINING",
-            "GROCERIES",
-            "SHOPPING",
-            "HEALTHCARE",
-            "EDUCATION",
-            "INSURANCE",
-            "OTHER_EXPENSE"
+            "Food",
+            "Transportation",
+            "Entertainment",
+            "Utilities",
+            "Shopping",
+            "Healthcare",
+            "Education",
+            "Insurance",
+            "Rent",
+            "Other Expense"
         ]
     };
-
-    function toDisplayCategory(category) {
-        if (!category) {
-            return "N/A";
-        }
-        return category.toLowerCase().split("_").map(function (part) {
-            return part.charAt(0).toUpperCase() + part.slice(1);
-        }).join(" ");
-    }
 
     // Initialize page
     function initializePage() {
@@ -74,11 +57,6 @@
             });
         }
 
-        var logoutBtn = document.getElementById("logoutBtn");
-        if (logoutBtn) {
-            logoutBtn.addEventListener("click", clearSessionAndLogout);
-        }
-
         // Load initial data
         updateCategories();
         loadTransactions();
@@ -106,7 +84,7 @@
         categories.forEach(function (category) {
             var option = document.createElement("option");
             option.value = category;
-            option.textContent = toDisplayCategory(category);
+            option.textContent = category;
             categorySelect.appendChild(option);
         });
 
@@ -143,7 +121,7 @@
         setTransactionMessage("Adding transaction...", "");
 
         try {
-            await window.TransactionApi.addTransaction({
+            var response = await window.TransactionApi.addTransaction({
                 userId: parseInt(userId),
                 type: type,
                 category: category,
@@ -245,79 +223,20 @@
             '<td><span class="type-badge ' + typeClass + '">' +
             transaction.type +
             "</span></td>" +
-            "<td>" + toDisplayCategory(transaction.category) + "</td>" +
+            "<td>" + (transaction.category || "N/A") + "</td>" +
             '<td class="amount ' + amountClass + '">' +
             amountSign +
             "$" +
             parseFloat(transaction.amount).toFixed(2) +
             "</td>" +
             "<td>" + (transaction.description || "-") + "</td>" +
-            "<td class=\"actions\"></td>";
-
-        var actionsCell = row.querySelector("td.actions");
-        if (actionsCell) {
-            var editBtn = document.createElement("button");
-            editBtn.className = "action-btn action-edit";
-            editBtn.textContent = "Edit";
-            editBtn.addEventListener("click", function () {
-                editTransaction(transaction);
-            });
-
-            var deleteBtn = document.createElement("button");
-            deleteBtn.className = "action-btn action-delete";
-            deleteBtn.textContent = "Delete";
-            deleteBtn.addEventListener("click", function () {
-                deleteTransaction(transaction.id);
-            });
-
-            actionsCell.appendChild(editBtn);
-            actionsCell.appendChild(deleteBtn);
-        }
+            '<td class="actions">' +
+            '<button class="action-btn action-delete" onclick="deleteTransaction(' +
+            transaction.id +
+            ')">Delete</button>' +
+            "</td>";
 
         return row;
-    }
-
-    async function editTransaction(transaction) {
-        var currentAmount = Number(transaction.amount || 0);
-        var newAmountInput = prompt("Update amount", currentAmount.toFixed(2));
-        if (newAmountInput === null) {
-            return;
-        }
-
-        var newAmount = parseFloat(newAmountInput);
-        if (isNaN(newAmount) || newAmount <= 0) {
-            alert("Please enter a valid amount greater than 0.");
-            return;
-        }
-
-        var newDescription = prompt("Update description", transaction.description || "");
-        if (newDescription === null) {
-            return;
-        }
-
-        var categoryOptions = CATEGORIES[transaction.type] || [];
-        var optionsMessage = "Choose category (use exact value):\n" + categoryOptions.join(", ");
-        var newCategory = prompt(optionsMessage, transaction.category || "");
-        if (newCategory === null) {
-            return;
-        }
-
-        if (categoryOptions.indexOf(newCategory) === -1) {
-            alert("Please choose a valid category from the suggested list.");
-            return;
-        }
-
-        try {
-            await window.TransactionApi.updateTransaction(transaction.id, {
-                amount: newAmount,
-                category: newCategory,
-                description: newDescription || null
-            });
-            setTransactionMessage("Transaction updated successfully.", "success");
-            loadTransactions();
-        } catch (error) {
-            setTransactionMessage(error.message || "Failed to update transaction", "error");
-        }
     }
 
     // Format date helper
@@ -411,7 +330,6 @@
     // Expose functions to global scope
     window.resetTransactionForm = resetTransactionForm;
     window.deleteTransaction = deleteTransaction;
-    window.editTransaction = editTransaction;
     window.refreshTransactions = refreshTransactions;
 
     // Initialize on DOM ready
