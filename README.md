@@ -286,4 +286,4 @@ For issues, questions, or suggestions:
 
 **Version:** 1.0  
 **Last Updated:** April 2026  
-**Author:** FinTrack Development Team
+**Authors:** Sujoy Sen, Ishaan Sinha, Tahir Shafiq, Ishika Raj
