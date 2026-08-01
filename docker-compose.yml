@@ -1,0 +1,43 @@
+services:
+  app:
+    # Build the Spring Boot image from the current project directory
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: budgetmanager-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Use the Docker service name 'mysql' instead of localhost inside the container network
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/budgetmanager
+      SPRING_DATASOURCE_USERNAME: budgetuser
+      SPRING_DATASOURCE_PASSWORD: budgetpass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mysql:
+    # Run MySQL 8 with a persistent named volume for local development
+    image: mysql:8.0
+    container_name: budgetmanager-mysql
+    environment:
+      MYSQL_DATABASE: budgetmanager
+      MYSQL_USER: budgetuser
+      MYSQL_PASSWORD: budgetpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  mysql-data:

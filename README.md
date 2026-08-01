@@ -59,6 +59,53 @@ A full-stack web application for managing personal finances with budget tracking
 - Git
 - Web browser (Chrome, Firefox, Safari, Edge)
 
+## Docker Deployment
+
+### Docker Prerequisites
+- Docker Engine 24+ with Docker Compose v2
+- At least 4 GB of RAM available for the containers
+
+### Build Instructions
+```bash
+docker compose build
+```
+
+### Start the Application and Database
+```bash
+docker compose up --build
+```
+
+The application will be available at `http://localhost:8080` and the MySQL database will be available on the host at port `3307`.
+
+### Stop the Environment
+```bash
+docker compose down
+```
+
+To remove the persistent database volume as well:
+```bash
+docker compose down -v
+```
+
+### Project Architecture Diagram
+```text
++-------------------+        +---------------------+
+| Browser / Client | <----> | Spring Boot App     |
+|                  |        | (Port 8080)         |
++-------------------+        +----------+----------+
+                                         |
+                                         v
+                                  +---------------------+
+                                  | MySQL Database      |
+                                  | (Container 3306, host 3307) |
+                                  +---------------------+
+```
+
+### Troubleshooting
+- If the Spring Boot container cannot reach MySQL, check that the datasource URL uses the Docker service name `mysql` rather than `localhost`.
+- If the database is not ready when the app starts, wait a few seconds and run `docker compose up` again.
+- To reset the local database state completely, run `docker compose down -v`.
+
 ## Installation
 
 ### 1. Clone the Repository
@@ -69,13 +116,13 @@ cd FinTrack
 
 ### 2. Database Setup
 ```sql
-CREATE DATABASE fintrack;
+CREATE DATABASE budgetmanager;
 ```
 
-### 3. Configure Database Connection
-Edit `src/main/resources/application.properties`:
+### 3. Configure Local Database Connection
+Edit `src/main/resources/application.properties` for local development:
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/fintrack
+spring.datasource.url=jdbc:mysql://localhost:3306/budgetmanager
 spring.datasource.username=root
 spring.datasource.password=your_password
 spring.jpa.hibernate.ddl-auto=update

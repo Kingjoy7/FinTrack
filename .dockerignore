@@ -1,0 +1,9 @@
+# Exclude local build artifacts and editor files from Docker build context
+
+target/
+.git/
+.idea/
+.vscode/
+*.iml
+.env
+.env.*
